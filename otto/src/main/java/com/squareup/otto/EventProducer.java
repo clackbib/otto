@@ -81,7 +81,9 @@ class EventProducer {
       throw new IllegalStateException(toString() + " has been invalidated and can no longer produce events.");
     }
     try {
-      return method.invoke(target);
+      Object obj =  method.invoke(target);
+      Bus.invokeProducerCallBack(method.getDeclaringClass().getCanonicalName(), method.getName(), target);
+      return obj;
     } catch (IllegalAccessException e) {
       throw new AssertionError(e);
     } catch (InvocationTargetException e) {

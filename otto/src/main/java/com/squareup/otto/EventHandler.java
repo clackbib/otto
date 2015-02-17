@@ -87,6 +87,7 @@ class EventHandler {
     }
     try {
       method.invoke(target, event);
+      Bus.invokeReceiverCallBack(method.getDeclaringClass().getCanonicalName(), method.getName(), event);
     } catch (IllegalAccessException e) {
       throw new AssertionError(e);
     } catch (InvocationTargetException e) {

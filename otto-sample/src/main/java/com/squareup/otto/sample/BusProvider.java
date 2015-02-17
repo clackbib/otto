@@ -16,16 +16,38 @@
 
 package com.squareup.otto.sample;
 
+import android.util.Log;
+
 import com.squareup.otto.Bus;
+import com.squareup.otto.EventCallBack;
 
 /**
  * Maintains a singleton instance for obtaining the bus. Ideally this would be replaced with a more efficient means
  * such as through injection directly into interested classes.
  */
 public final class BusProvider {
-  private static final Bus BUS = new Bus();
+  private static final Bus BUS;
+  private static final String OTTO_LOG_TAG = "Otto";
 
-  public static Bus getInstance() {
+    static {
+        BUS = new Bus();
+        Bus.setEventCallbacks(new EventCallBack() {
+            @Override
+            public void onEventFired(String originClass, String originMethod, Object eventFired) {
+                Log.v(OTTO_LOG_TAG, "Event" + eventFired.getClass().getCanonicalName() + " Fired From: " +
+                        originClass + " By" + originMethod);
+            }
+
+            @Override
+            public void onEventReceived(String receiverClass, String receiverMethod, Object eventFired) {
+                Log.v(OTTO_LOG_TAG, "Event" + eventFired.getClass().getCanonicalName() + " Received In: " +
+                        receiverClass + " By" + receiverMethod);
+            }
+        });
+    }
+
+
+    public static Bus getInstance() {
     return BUS;
   }
 

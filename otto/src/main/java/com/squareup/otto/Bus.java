@@ -87,8 +87,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class Bus {
   public static final String DEFAULT_IDENTIFIER = "default";
+  private static EventCallBack eventCallBack;
 
-  /** All registered event handlers, indexed by event type. */
+    /** All registered event handlers, indexed by event type. */
   private final ConcurrentMap<Class<?>, Set<EventHandler>> handlersByType =
           new ConcurrentHashMap<Class<?>, Set<EventHandler>>();
 
@@ -336,6 +337,22 @@ public class Bus {
     }
 
     dispatchQueuedEvents();
+  }
+
+  public static void setEventCallbacks(EventCallBack eventCallbacks) {
+      eventCallBack = eventCallbacks;
+  }
+
+  public static void invokeProducerCallBack(String producerClass, String producerMethod, Object producedEvent) {
+      if (eventCallBack != null) {
+            eventCallBack.onEventFired(producerClass, producerMethod, producedEvent);
+      }
+  }
+
+  public static void invokeReceiverCallBack(String receiverClass, String receiverMethod, Object receivedEvent) {
+      if (eventCallBack != null) {
+            eventCallBack.onEventReceived(receiverClass, receiverMethod, receivedEvent);
+      }
   }
 
   /**
