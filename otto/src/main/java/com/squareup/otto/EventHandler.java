@@ -124,4 +124,7 @@ class EventHandler {
     return method.equals(other.method) && target == other.target;
   }
 
+  public Object getTarget() {
+    return target;
+  }
 }
